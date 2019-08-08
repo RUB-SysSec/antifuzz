@@ -36,7 +36,7 @@ To enable all features, use:
       --enable-anti-coverage --signal --crash-action exit --enable-sleep --signal --hash-cmp --enable-encrypt-decrypt
 
 ## Demo
-To test it out, we supplied a demo application called antifuzz_test.c that just checks for "crsh" with single byte comparisons, and crashes if that's the case. It configures itself to fit the generated antifuzz header file, i.e. wenn hash comparisons are demanded via antifuzz_generate.py, antifuzz_demo will compare the hashes instead of the plain constants.
+To test it out, we supplied a demo application called antifuzz_test.c that just checks for "crsh" with single byte comparisons, and crashes if that's the case. It configures itself to fit the generated antifuzz header file, i.e. when hash comparisons are demanded via antifuzz_generate.py, antifuzz_test will compare the hashes instead of the plain constants.
 
 First, generate the antifuzz.h file:
 
@@ -81,7 +81,7 @@ Find comparisons to constants (e.g. magic bytes) that you think are important fo
 
     char *antifuzzELF = "ELF";
 
-Our generator script will automatically change these lines to their respective SHA512 hashes, you do not have to do this manually.
+Our generator script will automatically change these lines to their respective SHA512 hashes when generating the final header file, you do not have to do this manually.
 Now change the lines from (as an example):
 
     if(strcmp(header, "ELF") == 0)
@@ -93,8 +93,6 @@ to
 See antifuzz.tpl.h for more comparison functions.
 
 ### 5.
-If you have more data that you want to protect from symbolic execution, use 
+If you have more data that you want to protect from symbolic execution, use:
   
     antifuzz_encrypt_decrypt_buf(char *ptr, size_t fileSize) 
-
-which does an in-memory encryption and decryption of your data.

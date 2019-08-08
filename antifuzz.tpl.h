@@ -1,5 +1,5 @@
-#ifndef antifuzz_H
-#define antifuzz_H
+#ifndef ANTIFUZZ_H
+#define ANTIFUZZ_H
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
@@ -16,7 +16,7 @@
 #define FLAG_ZZUF FLAG_SIGNAL_TAMPERING
 #define FLAG_ALL FLAG_FILLBITMAP | FLAG_HEAVWEIGHTBB | FLAG_SIGNAL_TAMPERING | FLAG_ANTI_DEBUGGING
 
-#define USE_antifuzz ${USE_antifuzz}$
+#define USE_ANTIFUZZ ${USE_ANTIFUZZ}$
 #define USE_FILLBITMAP ${USE_FILLBITMAP}$
 #define USE_HEAVYWEIGHTBB ${USE_HEAVYWEIGHTBB}$
 #define DETECT_AFL ${DETECT_AFL}$
@@ -25,8 +25,8 @@
 #define FOR_CGC ${FOR_CGC}$
 #define ENABLE_SLEEP ${ENABLE_SLEEP}$
 #define DIFFICULTY_LEVEL ${DIFFICULTY_LEVEL}$
-#define antifuzz_SLEEP ${SLEEP_MS}$
-#define antifuzz_SLEEP_CRASH ${SLEEP_CRASH_MS}$
+#define ANTIFUZZ_SLEEP ${SLEEP_MS}$
+#define ANTIFUZZ_SLEEP_CRASH ${SLEEP_CRASH_MS}$
 #define USE_SIGNAL_TAMPERING (${USE_SIGNAL_TAMPERING}$ && !FOR_CGC)
 #define USE_HASH_CMP ${USE_HASH_CMP}$
 #define USE_ANTI_DEBUGGING (${USE_ANTI_DEBUGGING}$ && !FOR_CGC)
@@ -36,8 +36,8 @@
 
 #define INCLUDE_UNISTD ${INCLUDE_UNISTD}$
 
-#define antifuzz_CRASH_ACTION_SLEEP_UNTIL_TIMEOUT 0
-#define antifuzz_CRASH_ACTION_EXIT_GRACEFULLY 1 
+#define ANTIFUZZ_CRASH_ACTION_SLEEP_UNTIL_TIMEOUT 0
+#define ANTIFUZZ_CRASH_ACTION_EXIT_GRACEFULLY 1 
 #define IF_CRASH_THEN_DO ${CRASH_ACTION}$
 
 #define SLEEP_METHOD_BUSY_WAITING 0
@@ -73,10 +73,10 @@ void antifuzz_encrypt_decrypt_buf(char *ptr, size_t fileSize) ;
 
 /* antifuzz_constants.tpl.h */
 #if USE_HASH_CMP
-${antifuzz_CONSTANTS_TPL_H}$
+${ANTIFUZZ_CONSTANTS_TPL_H}$
 #endif
 
 /* antifuzz.tpl.c file */
-${antifuzz_TPL_C}$
+${ANTIFUZZ_TPL_C}$
 
 #endif

@@ -63,7 +63,7 @@ detectqemu = False
 detectpin = False
 forcgc = False
 difficulty = 4
-sleepcrashms = 800
+sleepcrashms = 750
 sleepms = sleepcrashms
 enablesignal = False
 #disablecmp = False
@@ -220,8 +220,8 @@ aes_h = open("aes.h", "r").read() + "\n" + open("aes.c", "r").read()
 
 # pre-render step (include all necessary files first)
 fileContent = str(open("antifuzz.tpl.h", "r").read())
-fileContent = fileContent.replace("${antifuzz_CONSTANTS_TPL_H}$", antifuzz_constants_tpl_h)
-fileContent = fileContent.replace("${antifuzz_TPL_C}$", antifuzz_tpl_c)
+fileContent = fileContent.replace("${ANTIFUZZ_CONSTANTS_TPL_H}$", antifuzz_constants_tpl_h)
+fileContent = fileContent.replace("${ANTIFUZZ_TPL_C}$", antifuzz_tpl_c)
 fileContent = fileContent.replace("${SHA512_H}$", sha512_h)
 fileContent = fileContent.replace("${AES_H}$", aes_h)
 
@@ -229,7 +229,7 @@ fileContent = fileContent.replace("${AES_H}$", aes_h)
 fileOutput = open("antifuzz.h", "w+")
 t = Templite(fileContent)
 renderOptions = {}
-renderOptions['USE_antifuzz']                 = int(enableantifuzz)
+renderOptions['USE_ANTIFUZZ']                 = int(enableantifuzz)
 renderOptions['NUM_FILLBITMAP']             = fillbitmapFunctions
 renderOptions['USE_FILLBITMAP']             = int(fillbitmapFunctions > 0)
 renderOptions['NUM_HEAVYWEIGHTBB']          = heavyweightbbs

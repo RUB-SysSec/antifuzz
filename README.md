@@ -4,18 +4,18 @@
 Get the paper here: https://www.usenix.org/system/files/sec19-guler.pdf
 
 ## Usage:
-antifuzz_generate.py generates a "antifuzz.h" file that you need to include in your project. The script takes multiple arguments to define which features you need.
+The python script antifuzz_generate.py generates a "antifuzz.h" file that you need to include in your C project (see chapter below). The script takes multiple arguments to define which features you want to activate.
 
 To disable all features, supply:
 
       --disable-all
 
   
-To break assumption (A), i.e. to break coverage-guided fuzzers, use:
+To break assumption (A), i.e. to break coverage-guided fuzzing, use:
 
       --enable-anti-coverage
 
-You can specify how many random BBs you want to have by supplying --anti-coverage [num], default is 10000.
+You can specify how many random BBs and random constrain functions you want to have by supplying "--anti-coverage [num]" (default: 10000).
 
 To break assumption (B), i.e. to prevent fuzzers from detecting crashes, use:
 
@@ -25,7 +25,7 @@ To break assumption (C), i.e. to decrease the performance of the application whe
 
       --enable-sleep --signal
 
-Additionaly, you can supply --crash-action timeout to replace every crash with a timeout.
+Additionaly, you can supply "--sleep [ms]" to set the length of the sleep in milliseconds (default: 750). You can also replace the crash behavior by supplying "--crash-action timeout" to replace every crash with a timeout. 
 
 To break assumption (D), i.e. to boggle down symbolic execution engines, use:
 
@@ -42,9 +42,9 @@ First, generate the antifuzz.h file:
 
     python antifuzz_generate.py --enable-anti-coverage --signal --crash-action exit --enable-sleep --signal --hash-cmp --enable-encrypt-decrypt
 
-Next, compile the demo application (note that this may take minutes (!) depending on the number of random BBs added):
+Next, compile the demo application with afl-gcc after installing AFL 2.52b (note that this may take minutes (!) depending on the number of random BBs added):
 
-    afl-gcc antifuzz_test.c -o antifuzz_test # this can take minutes
+    afl-gcc antifuzz_test.c -o antifuzz_test 
 
 Run it in AFL to test it out:
 
@@ -52,7 +52,7 @@ Run it in AFL to test it out:
 
 If you enabled all options, AFL may take a long time to start because the application is slowed down (to break assumption (C))
 
-## Protecting Application
+## Protecting Applications
 To include it in your own C project, follow these instructions (depending on your use-case and application, you might want to skip some of them):
 
 ### 1.

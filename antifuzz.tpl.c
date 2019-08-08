@@ -385,8 +385,8 @@ void _antifuzz_sleep(unsigned int sleepms) {
 }
 
 void antifuzz_onerror() {
-#if USE_antifuzz
-  _antifuzz_sleep(antifuzz_SLEEP);
+#if USE_ANTIFUZZ
+  _antifuzz_sleep(ANTIFUZZ_SLEEP);
 #endif
 }
 
@@ -404,13 +404,13 @@ void antifuzz_signal_handler(int signo) {
   printf("caught real signal\n");
 #endif
   signal(signo, SIG_DFL);
-#if IF_CRASH_THEN_DO == antifuzz_CRASH_ACTION_EXIT_GRACEFULLY
+#if IF_CRASH_THEN_DO == ANTIFUZZ_CRASH_ACTION_EXIT_GRACEFULLY
 #if ENABLE_PRINTF
   printf("exiting gracefully\n");
 #endif
   exit(0);
 #else //sleep until timeout
-  _antifuzz_sleep(antifuzz_SLEEP_CRASH);
+  _antifuzz_sleep(ANTIFUZZ_SLEEP_CRASH);
 #if ENABLE_PRINTF
   printf("raising signal\n");
 #endif
@@ -508,7 +508,7 @@ void antifuzz_ptrace_test() {
 #endif
 
 void antifuzz_init(char* filePath, unsigned int flags) {
-#if USE_antifuzz
+#if USE_ANTIFUZZ
   _antifuzz_init(filePath, -1, flags);
 #endif
 }

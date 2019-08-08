@@ -1,7 +1,7 @@
 
 # AntiFuzz: Impeding Fuzzing Audits of Binary Executables
 
-Get the paper here: https://www.usenix.org/system/files/sec19fall_guler_prepub.pdf
+Get the paper here: https://www.usenix.org/system/files/sec19-guler.pdf
 
 ## Usage:
 antifuzz_generate.py generates a "antifuzz.h" file that you need to include in your project. The script takes multiple arguments to define which features you need.
@@ -54,21 +54,47 @@ If you enabled all options, AFL may take a long time to start because the applic
 
 ## Protecting Application
 To include it in your own C project, follow these instructions (depending on your use-case and application, you might want to skip some of them):
-1. Add 
+
+### 1.
+Add 
 
     #include "antifuzz.h"
     
-    to the header.
-2. Jump to the line that opens the (main) input file, the one that an attacker might target as an attack vector, and call 
-  antifuzz_init("file_name_here", FLAG_ALL); 
-  This will initialize AntiFuzz, check if overwriting signals is possible and if ptrace is active, put the input through encryption and decryption, jump through random BBs, etc.
-3. Find all lines that deal with malformed input files, most often these already contain some kind of error or warning message (e.h. "this is not a valid ... file"). Add a call to "antifuzz_onerror()" everywhere you deem appropriate.
-4. Find comparisons to constants (e.g. magic bytes) that you think are important for this file format, and change the comparison to hash comparisons. Add your constant to antifuzz_constants.tpl.h like this:
-char \*antifuzzELF = "ELF";
+ to the header.
+
+### 2. 
+Jump to the line that opens the (main) input file, the one that an attacker might target as an attack vector, and call 
+  
+    antifuzz_init("file_name_here", FLAG_ALL); 
+
+This initializes AntiFuzz, checks if overwriting signals is possible, checks if the application is ptrace'd, puts the input through encryption and decryption, jumps through random BBs, etc.
+
+### 3.
+Find all lines and blocks of code that deal with malformed input files or introduce those yourself. It's often the case that these lines already exist to print some kind of error or warning message (e.g. "this is not a valid ... file"). Add a call to 
+
+    antifuzz_onerror()
+
+everywhere you deem appropriate.
+
+### 4.
+Find comparisons to constants (e.g. magic bytes) that you think are important for this file format, and change the comparison to hash comparisons. Add your constant to antifuzz_constants.tpl.h like this:
+
+    char *antifuzzELF = "ELF";
+
 Our generator script will automatically change these lines to their respective SHA512 hashes, you do not have to do this manually.
 Now change the lines from (as an example):
-if(strcmp(header, "ELF") == 0)
+
+    if(strcmp(header, "ELF") == 0)
+
 to
-if(antifuzz_str_equal(header, antifuzzELF))
+
+    if(antifuzz_str_equal(header, antifuzzELF))
+
 See antifuzz.tpl.h for more comparison functions.
-5. If you have more data that you want to protect from symbolic execution, use antifuzz_encrypt_decrypt_buf(char \*ptr, size_t fileSize) which does an in-memory encryption and decryption of your data.
+
+### 5.
+If you have more data that you want to protect from symbolic execution, use 
+  
+    antifuzz_encrypt_decrypt_buf(char *ptr, size_t fileSize) 
+
+which does an in-memory encryption and decryption of your data.
